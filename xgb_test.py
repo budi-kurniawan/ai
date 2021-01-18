@@ -37,7 +37,7 @@ print('--- get file ---')
 cols = ['EventDescription','IncidentCause','IncidentConsequence','Category']
 
 # importing file
-df = pd.read_csv('../../cleaned_incidents1.csv', usecols=cols)
+df = pd.read_csv('cleaned_incidents1.csv', usecols=cols)
 
 # drop missing category
 df = df.dropna(axis=0, subset=['Category'])
