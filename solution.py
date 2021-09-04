@@ -188,7 +188,7 @@ tf.keras.backend.clear_session()
 histories['model_inception_noTune'] = model_inception_noTune.fit(
     train_batches, 
     steps_per_epoch=STEPS_PER_EPOCH, 
-    epochs=1,
+    epochs=200,
     validation_data=val_batches,
     validation_steps=VALIDATION_STEPS,
     callbacks=get_callbacks('model_inception_noTune')
