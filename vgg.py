@@ -244,7 +244,7 @@ model_history = model_vgg_fineTune.fit(
     validation_data=val_batches,
     validation_steps=VALIDATION_STEPS,
     callbacks=get_callbacks('model_vgg_fineTune'),
-    verbose=0
+    verbose=2
 )
 histories[experiment_name] = model_history.history
 
