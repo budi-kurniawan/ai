@@ -38,8 +38,7 @@ logdir = os.path.join('.', '/logs/', run_id)
 # Function to create a callback function to set early stopping and tensorBoard
 def get_callbacks(name, isLog=True):
   return [
-    tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=20),
-    tf.keras.callbacks.TensorBoard(logdir + "/" + name, histogram_freq=1, write_images=True, profile_batch = '100,120')
+    tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=20)
   ]
 
 # Rescaling
