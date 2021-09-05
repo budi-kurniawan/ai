@@ -207,7 +207,7 @@ tf.keras.backend.clear_session()
 model_history = model_vgg_noTune.fit(
     train_batches, 
     steps_per_epoch=STEPS_PER_EPOCH, 
-    epochs=3  #NUM_EPOCHS,
+    epochs=3,  #NUM_EPOCHS,
     validation_data=val_batches,
     validation_steps=VALIDATION_STEPS,
     callbacks=get_callbacks(experiment_name),
