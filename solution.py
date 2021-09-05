@@ -203,6 +203,6 @@ print('finish 3')
 model_inception_noTune.save('model_inception_noTune.h5')
 print('finish 4')
 
-with open('model_inception_noTune_history.pickle', 'wb') as file_out_handle:
+with open('model_inception_noTune.pickle', 'wb') as file_out_handle:
     pickle.dump(histories['model_inception_noTune'].history, file_out_handle)
 
