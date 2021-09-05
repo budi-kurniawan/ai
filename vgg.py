@@ -192,29 +192,65 @@ def make_model_vgg():
 
 #-------------------------------------------------------------
 
-# without fine tune, pretrained base model weight is frozen
-conv_base_vgg.trainable = False
+# # without fine tune, pretrained base model weight is frozen
+# conv_base_vgg.trainable = False
 
-model_vgg_noTune = make_model_vgg()
-model_vgg_noTune.summary()
+# model_vgg_noTune = make_model_vgg()
+# model_vgg_noTune.summary()
 
-experiment_name = 'model_vgg_noTune'
+# experiment_name = 'model_vgg_noTune'
 
-print('Batch size:', BATCH_SIZE)
+# print('Batch size:', BATCH_SIZE)
 
-tf.keras.backend.clear_session()
-model_history = model_vgg_noTune.fit(
+# tf.keras.backend.clear_session()
+# model_history = model_vgg_noTune.fit(
+#     train_batches, 
+#     steps_per_epoch=STEPS_PER_EPOCH, 
+#     epochs=NUM_EPOCHS,
+#     validation_data=val_batches,
+#     validation_steps=VALIDATION_STEPS,
+#     callbacks=get_callbacks(experiment_name)
+# )
+# histories[experiment_name] = model_history.history
+
+# # save model
+# model_vgg_noTune.save(experiment_name + '.h5')
+# save_model_history(histories[experiment_name], experiment_name + '.pickle')
+
+
+#------------------------------------------------------------------
+conv_base_vgg.trainable = True
+
+set_trainable = False
+for layer in conv_base_vgg.layers:
+    if layer.name == 'block5_conv1':
+        set_trainable = True
+        
+    if set_trainable:
+        layer.trainable = True
+    else:
+        layer.trainable = False
+      
+model_vgg_fineTune = make_model_vgg()
+
+experiment_name = 'model_vgg_fineTune'
+
+print('batch_size: {0} #Epochs: {1} steps_per_epoch: {2} validation_steps: {3}'.format(BATCH_SIZE, NUM_EPOCHS, STEPS_PER_EPOCH, VALIDATION_STEPS))
+
+model_history = model_vgg_fineTune.fit(
     train_batches, 
     steps_per_epoch=STEPS_PER_EPOCH, 
     epochs=NUM_EPOCHS,
-    validation_data=val_batches,
+    validation_data=val_ds,
     validation_steps=VALIDATION_STEPS,
-    callbacks=get_callbacks(experiment_name)
+    callbacks=get_callbacks('model_vgg_fineTune'),
+    verbose=0
 )
 histories[experiment_name] = model_history.history
 
-# save model
-model_vgg_noTune.save(experiment_name + '.h5')
+model_vgg_fineTune.save(experiment_name + '.h5')
 save_model_history(histories[experiment_name], experiment_name + '.pickle')
+
+
 
 
