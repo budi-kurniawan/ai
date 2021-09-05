@@ -149,8 +149,6 @@ def load_model_history(file_name):
       return pickle.load(file_in_handle)
 
 # load MNIST data for VGG16
-BATCH_SIZE = 32 # use small batch size
-
 X_train, y_train, X_test, y_test, X_val, y_val = load_data(is_reshape=True) 
 set_global_variables (BATCH_SIZE, len(X_train), len(X_val))
 
@@ -201,6 +199,8 @@ model_vgg_noTune = make_model_vgg()
 model_vgg_noTune.summary()
 
 experiment_name = 'model_vgg_noTune'
+
+print('Batch size:', BATCH_SIZE)
 
 tf.keras.backend.clear_session()
 model_history = model_vgg_noTune.fit(
