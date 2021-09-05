@@ -241,7 +241,7 @@ model_history = model_vgg_fineTune.fit(
     train_batches, 
     steps_per_epoch=STEPS_PER_EPOCH, 
     epochs=NUM_EPOCHS,
-    validation_data=val_ds,
+    validation_data=val_batches,
     validation_steps=VALIDATION_STEPS,
     callbacks=get_callbacks('model_vgg_fineTune'),
     verbose=0
