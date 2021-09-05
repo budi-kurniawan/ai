@@ -31,10 +31,16 @@ BUFFER_SIZE = 0
 
 histories = {}
 
+run_id = datetime.now().strftime("%Y%m%d-%H%M%S")
+logdir = os.path.join(assignment_dir, "/logs/", run_id)
+
+NUM_EPOCHS = 2
+
 # Function to create a callback function to set early stopping and tensorBoard
 def get_callbacks(name, isLog=True):
   return [
-    tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=20)
+    tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=20),
+    tf.keras.callbacks.TensorBoard(logdir + "/" + name, histogram_freq=1, write_images=True, profile_batch = '100,120')
   ]
 
 # Rescaling
@@ -188,7 +194,7 @@ tf.keras.backend.clear_session()
 histories['model_inception_noTune'] = model_inception_noTune.fit(
     train_batches, 
     steps_per_epoch=STEPS_PER_EPOCH, 
-    epochs=200,
+    epochs=NUM_EPOCHS,
     validation_data=val_batches,
     validation_steps=VALIDATION_STEPS,
     callbacks=get_callbacks('model_inception_noTune')
