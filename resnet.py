@@ -148,52 +148,34 @@ def load_model_history(file_name):
   with open(file_name, 'rb') as file_in_handle:
       return pickle.load(file_in_handle)
 
-# load MNIST data for VGG16
-X_train, y_train, X_test, y_test, X_val, y_val = load_data(is_reshape=True) 
-set_global_variables (BATCH_SIZE, len(X_train), len(X_val))
-
-train_ds = tf.data.Dataset.from_tensor_slices((X_train, y_train))
-val_ds = tf.data.Dataset.from_tensor_slices((X_val, y_val))
-test_ds = tf.data.Dataset.from_tensor_slices((X_test, y_test))
-
-# pre-process images
-IMAGE_SIZE = 32
-def pre_process_image(image, label):
-  image = tf.image.convert_image_dtype(image, tf.float32)
-  image = tf.image.resize(image, (IMAGE_SIZE, IMAGE_SIZE))
-  image = tf.image.grayscale_to_rgb(image)
-  return image, label
-
-# input pipelines
-train_batches = train_ds.map(pre_process_image).batch(BATCH_SIZE).cache().repeat().prefetch(AUTOTUNE)
-val_batches = val_ds.map(pre_process_image).batch(BATCH_SIZE).cache().repeat().prefetch(AUTOTUNE)
-test_batches = test_ds.map(pre_process_image).batch(BATCH_SIZE).cache().repeat().prefetch(AUTOTUNE)
-
-#-----------------------------------------------------
-# VGG16 pretrained model on imagenet as a base model
-conv_base_vgg = VGG16(weights='imagenet',
-                  include_top=False,
-                  input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3))
-
-conv_base_vgg.summary()
-
-# Construct the model
-def make_model_vgg():
-  model = models.Sequential()
-  model.add(conv_base_vgg)
-  model.add(layers.Flatten())
-  model.add(layers.Dense(256, activation='relu'))
-  model.add(layers.Dropout(0.5))
-  model.add(layers.Dense(10, activation='softmax'))
-
-  model.compile(optimizer=tf.keras.optimizers.Adam(LR_SCHEDULE), loss='categorical_crossentropy', metrics=['accuracy'])
-
-  return model
-
 #-------------------------------------------------------------
 
 # Load cifar for resnet
 
+def load_cifar_data():
+    global STEPS_PER_EPOCH, VALIDATION_STEPS
+
+    (X_train, y_train), (X_test, y_test) = cifar10.load_data()
+
+    STEPS_PER_EPOCH = len(X_train)/BATCH_SIZE
+    VALIDATION_STEPS = len(X_test)/BATCH_SIZE
+    LR_SCHEDULE = set_lr_schedule(STEPS_PER_EPOCH)
+
+    # Converting the pixels data to float type
+    X_train = X_train.astype('float32')
+    X_test = X_test.astype('float32')
+    
+    # Standardizing (255 is the total number of pixels an image can have)
+    X_train = X_train / 255
+    X_test = X_test / 255 
+
+    # One hot encoding the target class (labels)
+    num_classes = 10
+    y_train = to_categorical(y_train, num_classes)
+    y_test = to_categorical(y_test, num_classes)
+
+    return X_train, y_train, X_test, y_test
+  
 X_train, y_train, X_test, y_test  = load_cifar_data()
 
 train_ds = tf.data.Dataset.from_tensor_slices((X_train, y_train))
