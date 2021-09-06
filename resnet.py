@@ -221,7 +221,7 @@ experiment_name = 'model_cifar_resnet'
 model_history = model_cifar_resnet.fit(
       train_batches,
       steps_per_epoch=STEPS_PER_EPOCH,
-      epochs=2,
+      epochs=NUM_EPOCHS,
       validation_data=test_batches,
       validation_steps=VALIDATION_STEPS,
       verbose=2
