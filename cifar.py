@@ -98,7 +98,7 @@ def load_cifar_data():
 
     return X_train, y_train, X_test, y_test
   
-  X_train, y_train, X_test, y_test  = load_cifar_data()
+X_train, y_train, X_test, y_test  = load_cifar_data()
 
 train_ds = tf.data.Dataset.from_tensor_slices((X_train, y_train))\
         .batch(batch_size=BATCH_SIZE)\
